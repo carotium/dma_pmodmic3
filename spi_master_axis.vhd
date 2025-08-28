@@ -77,9 +77,6 @@ architecture RTL of spi_master_axis is
     --Next tdata for assignment in a process
     signal next_tdata : std_logic_vector(M_AXIS_TDATA_WIDTH-1 downto 0) := (others => '0');
 
-    --testing signal
-    signal write_sample_condition : std_logic := '0';
-
 begin
 
     --I/O assignments
@@ -128,7 +125,7 @@ begin
 
     --Sample collection
     write_whole_sample_count <= (spi_whole_sample_count-1) when (spi_whole_sample_count > 0) else 15;
-    write_sample_condition <= '1' when (sclk_counter = "101" and prev_sclk_counter = "100" and do_spi_sample = '0') else '0';
+    --write_sample_condition <= '1' when (sclk_counter = "101" and prev_sclk_counter = "100" and do_spi_sample = '0') else '0';
 
     --Sample collection process
     --do_transfer samples over AXIS assignment
@@ -160,7 +157,7 @@ begin
     end process sampling_process;
 
     --Valid comes as soon as we get the whole sample from SPI
-    next_tvalid <= '1' when (write_sample_condition = '1') else '0';
+    next_tvalid <= '1' when (sclk_counter = "101" and prev_sclk_counter = "100" and do_spi_sample = '0') else '0';
 
     --Send spi_sample as soon as it is sampled
     next_tdata <= x"0000" & spi_sample when (next_tvalid = '1') else x"DEADBEEF";
