@@ -59,7 +59,6 @@ architecture RTL of spi_master_axis is
 
     --We want to send an AXIS packet of 16 SPI samples
     type spi_sample_array is array (0 to M_SPI_TRANSFER_LENGTH-1) of std_logic_vector(15 downto 0);
-    --signal spi_samples : spi_sample_array := (others => (others => '0'));
     --Spi whole sample of 16 bits counter
     signal spi_whole_sample_count : integer range 0 to M_SPI_TRANSFER_LENGTH-1 := 0;
     --
@@ -125,7 +124,6 @@ begin
 
     --Sample collection
     write_whole_sample_count <= (spi_whole_sample_count-1) when (spi_whole_sample_count > 0) else 15;
-    --write_sample_condition <= '1' when (sclk_counter = "101" and prev_sclk_counter = "100" and do_spi_sample = '0') else '0';
 
     --Sample collection process
     --do_transfer samples over AXIS assignment
